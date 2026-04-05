@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="theme-color" content="#2c001e" />
+    <link rel="manifest" href="/manifest.json" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='none' stroke='%23E95420' stroke-width='8'/><circle cx='50' cy='14' r='10' fill='%23E95420'/><circle cx='81' cy='67' r='10' fill='%23E95420'/><circle cx='19' cy='67' r='10' fill='%23E95420'/></svg>"
+    />
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Panel de Control</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ubuntu-orange: #e95420;
+        --ubuntu-orange-dark: #c7461a;
+        --ubuntu-orange-glow: rgba(233, 84, 32, 0.3);
+        --ubuntu-purple: #77216f;
+        --ubuntu-aubergine: #2c001e;
+        --ubuntu-mid: #5e2750;
+        --bg: #1a0b14;
+        --surface: #2c1124;
+        --surface2: #3a1830;
+        --text: #f2efee;
+        --text-muted: #aea79f;
+        --green: #1db954;
+        --border: rgba(233, 84, 32, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Ubuntu", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background-image:
+          radial-gradient(
+            ellipse 60% 80% at 0% 50%,
+            rgba(119, 33, 111, 0.25) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 40% 60% at 100% 50%,
+            rgba(233, 84, 32, 0.12) 0%,
+            transparent 60%
+          );
+      }
+
+      /* TOP BAR */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 16px;
+        background: rgba(44, 0, 30, 0.85);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        flex-shrink: 0;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ubuntu-logo {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+      }
+      .topbar-title {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .time-display {
+        font-family: "Ubuntu Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 6px var(--green);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        padding: 12px;
+        gap: 12px;
+      }
+
+      /* LEFT PANEL - Music */
+      .panel-music {
+        width: 220px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* RIGHT PANEL - Apps */
+      .panel-apps {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: hidden;
+      }
+
+      .apps-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        flex: 1;
+      }
+      
+      @media (orientation: portrait) {
+        .main {
+          flex-direction: column;
+          padding: 10px;
+          gap: 10px;
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+
+        .panel-music {
+          width: 100%;
+          flex-shrink: 0;
+        }
+
+        .music-card {
+          flex-direction: row !important;
+          align-items: center;
+          gap: 12px !important;
+          padding: 12px !important;
+        }
+
+        .music-icon {
+          font-size: 1.6rem !important;
+          flex-shrink: 0;
+        }
+
+        .music-center {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          min-width: 0;
+        }
+
+        .track-name {
+          text-align: left !important;
+          font-size: 0.82rem !important;
+          -webkit-line-clamp: 1 !important;
+          line-clamp: 1 !important;
+        }
+
+        .music-controls {
+          gap: 6px !important;
+        }
+
+        .btn-music {
+          padding: 7px 4px !important;
+          font-size: 0.9rem !important;
+        }
+
+        .vol-row-wrap {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-shrink: 0;
+          flex-direction: column;
+          width: 36px;
+        }
+
+        .panel-apps {
+          flex: 1;
+        }
+
+        .apps-grid {
+          grid-template-columns: repeat(5, 1fr);
+          gap: 8px;
+          flex: unset;
+        }
+
+        .btn-app {
+          aspect-ratio: 1;
+        }
+
+        .app-emoji {
+          font-size: 1.3rem !important;
+        }
+        .app-label {
+          font-size: 0.58rem !important;
+        }
+      }
+
+      @media (orientation: portrait) and (max-width: 380px) {
+        .apps-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .app-emoji {
+          font-size: 1.1rem !important;
+        }
+      }
+
+      .music-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+      .music-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--green), transparent);
+      }
+
+      .music-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-muted);
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+      .music-icon {
+        font-size: 2.2rem;
+        text-align: center;
+        filter: drop-shadow(0 0 8px rgba(29, 185, 84, 0.4));
+      }
+      .track-name {
+        font-size: 0.78rem;
+        color: var(--green);
+        font-weight: 500;
+        line-height: 1.3;
+        min-height: 2.2em;
+        text-align: center;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .music-controls {
+        display: flex;
+        gap: 8px;
+      }
+      .btn-music {
+        flex: 1;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 9px 4px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.15s;
+        font-family: inherit;
+      }
+      .btn-music:active {
+        background: var(--ubuntu-orange);
+        border-color: var(--ubuntu-orange);
+        transform: scale(0.96);
+      }
+
+      .vol-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .vol-label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        width: 14px;
+      }
+      input[type="range"] {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 3px;
+        border-radius: 2px;
+        background: var(--surface2);
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--ubuntu-orange);
+        cursor: pointer;
+        box-shadow: 0 0 6px var(--ubuntu-orange-glow);
+      }
+
+      .section-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-muted);
+        font-weight: 500;
+        padding-left: 2px;
+        flex-shrink: 0;
+      }
+
+      .btn-app {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.15s ease;
+        font-family: "Ubuntu", sans-serif;
+        padding: 6px 4px;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-app::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--ubuntu-orange);
+        opacity: 0;
+        transition: opacity 0.15s;
+        border-radius: 11px;
+      }
+      .btn-app:active::after {
+        opacity: 0.15;
+      }
+      .btn-app:active {
+        transform: scale(0.95);
+        border-color: var(--ubuntu-orange);
+      }
+      .btn-app:hover {
+        background: var(--surface2);
+        border-color: rgba(233, 84, 32, 0.4);
+      }
+      .app-emoji {
+        font-size: 1.5rem;
+        line-height: 1;
+      }
+      .app-label {
+        font-size: 0.6rem;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.2;
+        font-weight: 400;
+      }
+
+      .btn-app.accent {
+        background: linear-gradient(
+          135deg,
+          var(--ubuntu-orange-dark),
+          var(--ubuntu-orange)
+        );
+        border-color: var(--ubuntu-orange);
+      }
+      .btn-app.accent .app-label {
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .btn-app.green {
+        border-color: rgba(29, 185, 84, 0.3);
+      }
+      .btn-app.green:hover {
+        border-color: rgba(29, 185, 84, 0.6);
+      }
+      .btn-app.green:active {
+        border-color: var(--green);
+      }
+
+      .feedback {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(233, 84, 32, 0.4);
+        pointer-events: none;
+        transform: translate(-50%, -50%) scale(0);
+        animation: ripple 0.4s ease-out forwards;
+        z-index: 999;
+      }
+      @keyframes ripple {
+        to {
+          transform: translate(-50%, -50%) scale(3);
+          opacity: 0;
+        }
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(60px);
+        background: var(--surface);
+        border: 1px solid var(--ubuntu-orange);
+        border-radius: 20px;
+        padding: 7px 18px;
+        font-size: 0.75rem;
+        color: var(--ubuntu-orange);
+        transition: transform 0.3s ease;
+        z-index: 100;
+        white-space: nowrap;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <svg
+          class="ubuntu-logo"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r="48"
+            fill="none"
+            stroke="#E95420"
+            stroke-width="8"
+          />
+          <circle cx="50" cy="14" r="10" fill="#E95420" />
+          <circle cx="81" cy="67" r="10" fill="#E95420" />
+          <circle cx="19" cy="67" r="10" fill="#E95420" />
+        </svg>
+        <span class="topbar-title">PC Control · Ubuntu 24.04</span>
+      </div>
+      <div class="topbar-right">
+        <span class="time-display" id="clock">--:--</span>
+        <div class="status-dot"></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <!-- MUSIC PANEL -->
+      <div class="panel-music">
+        <div class="music-card">
+          <span class="music-label">🎵 Reproduciendo</span>
+          <div class="music-icon">♫</div>
+          <div class="music-center">
+            <div class="track-name" id="track-name">Cargando...</div>
+            <div class="music-controls">
+              <button
+                class="btn-music"
+                onclick="action('/api/spotify/playpause', this)"
+                title="Play/Pausa"
+              >
+                ⏯
+              </button>
+              <button
+                class="btn-music"
+                onclick="action('/api/spotify/prev', this)"
+                title="Anterior"
+              >
+                ⏮
+              </button>
+              <button
+                class="btn-music"
+                onclick="action('/api/spotify/next', this)"
+                title="Siguiente"
+              >
+                ⏭
+              </button>
+            </div>
+            <div class="vol-row">
+              <span class="vol-label">🔈</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value="70"
+                id="vol-slider"
+                oninput="setVolume(this.value)"
+              />
+              <span class="vol-label">🔊</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPS PANEL -->
+      <div class="panel-apps">
+        <span class="section-label">Aplicaciones</span>
+        <div class="apps-grid">
+          <button
+            class="btn-app green"
+            onclick="action('/api/apps/spotify', this)"
+          >
+            <span class="app-emoji">🎵</span
+            ><span class="app-label">Spotify</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/terminal', this)">
+            <span class="app-emoji">💻</span
+            ><span class="app-label">Terminal</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/navegador', this)">
+            <span class="app-emoji">🌐</span
+            ><span class="app-label">Navegador</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/archivos', this)">
+            <span class="app-emoji">📂</span
+            ><span class="app-label">Archivos</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/vscode', this)">
+            <span class="app-emoji">⌨️</span
+            ><span class="app-label">VS Code</span>
+          </button>
+
+          <button
+            class="btn-app"
+            onclick="action('/api/apps/onlyoffice', this)"
+          >
+            <span class="app-emoji">📄</span
+            ><span class="app-label">OnlyOffice</span>
+          </button>
+          <button
+            class="btn-app"
+            onclick="action('/api/apps/calculadora', this)"
+          >
+            <span class="app-emoji">🧮</span
+            ><span class="app-label">Calculadora</span>
+          </button>
+          <button
+            class="btn-app"
+            onclick="action('/api/apps/configuracion', this)"
+          >
+            <span class="app-emoji">⚙️</span
+            ><span class="app-label">Ajustes</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/monitor', this)">
+            <span class="app-emoji">📊</span
+            ><span class="app-label">Monitor</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/captura', this)">
+            <span class="app-emoji">📸</span
+            ><span class="app-label">Captura</span>
+          </button>
+
+          <button class="btn-app" onclick="action('/api/apps/gimp', this)">
+            <span class="app-emoji">🎨</span><span class="app-label">GIMP</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/vlc', this)">
+            <span class="app-emoji">🎬</span><span class="app-label">VLC</span>
+          </button>
+          <button class="btn-app" onclick="action('/api/apps/discord', this)">
+            <span class="app-emoji">💬</span
+            ><span class="app-label">Discord</span>
+          </button>
+          <button
+            class="btn-app"
+            onclick="action('/api/apps/antigravity', this)"
+          >
+            <span class="app-emoji">🚀</span
+            ><span class="app-label">Antigravity</span>
+          </button>
+          <button
+            class="btn-app accent"
+            onclick="action('/api/system/lock', this)"
+          >
+            <span class="app-emoji">🔒</span
+            ><span class="app-label">Bloquear</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      function applyPortraitLayout() {
+        const card = document.querySelector(".music-card");
+        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+        if (isPortrait) {
+          card.style.flexDirection = "row";
+          card.style.alignItems = "center";
+        } else {
+          card.style.flexDirection = "";
+          card.style.alignItems = "";
+        }
+      }
+      applyPortraitLayout();
+      window.addEventListener("resize", applyPortraitLayout);
+
+      // Clock
+      function updateClock() {
+        const now = new Date();
+        document.getElementById("clock").textContent =
+          now.getHours().toString().padStart(2, "0") +
+          ":" +
+          now.getMinutes().toString().padStart(2, "0");
+      }
+      updateClock();
+      setInterval(updateClock, 10000);
+
+      function spawnRipple(e) {
+        const r = document.createElement("div");
+        r.className = "feedback";
+        r.style.left = e.clientX + "px";
+        r.style.top = e.clientY + "px";
+        document.body.appendChild(r);
+        setTimeout(() => r.remove(), 400);
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1800);
+      }
+
+      function action(endpoint, btn, e) {
+        if (e) spawnRipple(e);
+        fetch(endpoint)
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.status === "ok") {
+              const label =
+                btn?.querySelector(".app-label")?.textContent || "✓";
+              showToast("▶ " + label);
+            }
+            if (
+              endpoint.includes("spotify") ||
+              endpoint.includes("playpause") ||
+              endpoint.includes("next") ||
+              endpoint.includes("prev")
+            ) {
+              setTimeout(updateTrack, 800);
+            }
+          })
+          .catch(() => showToast("⚠ Sin conexión"));
+      }
+
+      document.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", (e) => spawnRipple(e));
+      });
+
+      function updateTrack() {
+        fetch("/api/spotify/current")
+          .then((r) => r.json())
+          .then((data) => {
+            document.getElementById("track-name").textContent = data.cancion;
+          })
+          .catch(() => {});
+      }
+      setInterval(updateTrack, 4000);
+      updateTrack();
+
+      function setVolume(val) {
+        fetch("/api/system/volume/" + val).catch(() => {});
+      }
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(console.error);
+      }
+    </script>
+  </body>
+</html>
