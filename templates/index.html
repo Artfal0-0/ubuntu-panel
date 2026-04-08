@@ -9,6 +9,8 @@
     />
     <meta name="theme-color" content="#2c001e" />
     <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link
       rel="icon"
       type="image/svg+xml"
@@ -156,7 +158,7 @@
         gap: 8px;
         flex: 1;
       }
-      
+
       @media (orientation: portrait) {
         .main {
           flex-direction: column;
@@ -297,7 +299,7 @@
       }
       .music-controls {
         display: flex;
-        gap: 8px;
+        gap: 4px;
       }
       .btn-music {
         flex: 1;
@@ -469,23 +471,7 @@
     <!-- TOP BAR -->
     <div class="topbar">
       <div class="topbar-left">
-        <svg
-          class="ubuntu-logo"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="50"
-            cy="50"
-            r="48"
-            fill="none"
-            stroke="#E95420"
-            stroke-width="8"
-          />
-          <circle cx="50" cy="14" r="10" fill="#E95420" />
-          <circle cx="81" cy="67" r="10" fill="#E95420" />
-          <circle cx="19" cy="67" r="10" fill="#E95420" />
-        </svg>
+        <i class="fa-brands fa-ubuntu"></i>
         <span class="topbar-title">PC Control · Ubuntu 24.04</span>
       </div>
       <div class="topbar-right">
@@ -499,44 +485,57 @@
       <!-- MUSIC PANEL -->
       <div class="panel-music">
         <div class="music-card">
-          <span class="music-label">🎵 Reproduciendo</span>
-          <div class="music-icon">♫</div>
+          <span class="music-label"><i class="fa-solid fa-music"></i> Reproduciendo</span>
           <div class="music-center">
             <div class="track-name" id="track-name">Cargando...</div>
             <div class="music-controls">
               <button
                 class="btn-music"
-                onclick="action('/api/spotify/playpause', this)"
-                title="Play/Pausa"
-              >
-                ⏯
-              </button>
-              <button
-                class="btn-music"
                 onclick="action('/api/spotify/prev', this)"
                 title="Anterior"
               >
-                ⏮
+                <i class="fa-solid fa-backward-step"></i>
+              </button>
+              <button
+                class="btn-music"
+                onclick="action('/api/spotify/playpause', this)"
+                title="Play/Pausa"
+              >
+                <i class="fa-solid fa-play"></i>
               </button>
               <button
                 class="btn-music"
                 onclick="action('/api/spotify/next', this)"
                 title="Siguiente"
               >
-                ⏭
+                <i class="fa-solid fa-forward-step"></i>
               </button>
             </div>
-            <div class="vol-row">
-              <span class="vol-label">🔈</span>
+
+            <div class="vol-row" style="margin-top: 15px">
+              <span class="vol-label"><i class="fa-solid fa-volume-low"></i></span>
               <input
                 type="range"
                 min="0"
                 max="100"
-                value="70"
+                value="30"
                 id="vol-slider"
                 oninput="setVolume(this.value)"
               />
-              <span class="vol-label">🔊</span>
+              <span class="vol-label"><i class="fa-solid fa-volume-high"></i></span>
+            </div>
+            <br />
+            <div class="vol-row">
+              <span class="vol-label"><i class="fa-regular fa-sun"></i></span>
+              <input
+                type="range"
+                min="-5"
+                max="100"
+                value="0"
+                id="bright-slider"
+                oninput="setBrightness(this.value)"
+              />
+              <span class="vol-label"><i class="fa-solid fa-sun"></i></span>
             </div>
           </div>
         </div>
@@ -550,79 +549,81 @@
             class="btn-app green"
             onclick="action('/api/apps/spotify', this)"
           >
-            <span class="app-emoji">🎵</span
-            ><span class="app-label">Spotify</span>
+            <span class="app-emoji"><i class="fa-brands fa-spotify"></i></span>
+            <span class="app-label">Spotify</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/terminal', this)">
-            <span class="app-emoji">💻</span
-            ><span class="app-label">Terminal</span>
+            <span class="app-emoji"><i class="fa-solid fa-terminal"></i></span>
+            <span class="app-label">Terminal</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/navegador', this)">
-            <span class="app-emoji">🌐</span
-            ><span class="app-label">Navegador</span>
+            <span class="app-emoji"><i class="fa-brands fa-firefox-browser"></i></span>
+            <span class="app-label">Navegador</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/archivos', this)">
-            <span class="app-emoji">📂</span
-            ><span class="app-label">Archivos</span>
+            <span class="app-emoji"><i class="fa-solid fa-folder"></i></span>
+            <span class="app-label">Archivos</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/vscode', this)">
-            <span class="app-emoji">⌨️</span
-            ><span class="app-label">VS Code</span>
+            <span class="app-emoji"><i class="fa-solid fa-code"></i></span>
+            <span class="app-label">VS Code</span>
           </button>
 
           <button
             class="btn-app"
             onclick="action('/api/apps/onlyoffice', this)"
           >
-            <span class="app-emoji">📄</span
-            ><span class="app-label">OnlyOffice</span>
+            <span class="app-emoji"><i class="fa-solid fa-file-excel"></i></span>
+            <span class="app-label">OnlyOffice</span>
           </button>
           <button
             class="btn-app"
             onclick="action('/api/apps/calculadora', this)"
           >
-            <span class="app-emoji">🧮</span
-            ><span class="app-label">Calculadora</span>
+            <span class="app-emoji"><i class="fa-solid fa-calculator"></i></span>
+            <span class="app-label">Calculadora</span>
           </button>
           <button
             class="btn-app"
             onclick="action('/api/apps/configuracion', this)"
           >
-            <span class="app-emoji">⚙️</span
-            ><span class="app-label">Ajustes</span>
+            <span class="app-emoji"><i class="fa-solid fa-gears"></i></span>
+            <span class="app-label">Ajustes</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/monitor', this)">
-            <span class="app-emoji">📊</span
-            ><span class="app-label">Monitor</span>
+            <span class="app-emoji"><i class="fa-solid fa-heart-pulse"></i></span>
+            <span class="app-label">Monitor</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/captura', this)">
-            <span class="app-emoji">📸</span
-            ><span class="app-label">Captura</span>
+            <span class="app-emoji"><i class="fa-solid fa-camera"></i></span>
+            <span class="app-label">Captura</span>
           </button>
 
           <button class="btn-app" onclick="action('/api/apps/gimp', this)">
-            <span class="app-emoji">🎨</span><span class="app-label">GIMP</span>
+            <span class="app-emoji"><i class="fa-solid fa-palette"></i></span>
+            <span class="app-label">GIMP</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/vlc', this)">
-            <span class="app-emoji">🎬</span><span class="app-label">VLC</span>
+            <span class="app-emoji"><i class="fa-solid fa-video"></i></span>
+            <span class="app-label">VLC</span>
           </button>
           <button class="btn-app" onclick="action('/api/apps/discord', this)">
-            <span class="app-emoji">💬</span
-            ><span class="app-label">Discord</span>
+            <span class="app-emoji"><i class="fa-brands fa-discord"></i></span>
+            <span class="app-label">Discord</span>
           </button>
           <button
             class="btn-app"
             onclick="action('/api/apps/antigravity', this)"
           >
-            <span class="app-emoji">🚀</span
-            ><span class="app-label">Antigravity</span>
+            <span class="app-emoji"><i class="fa-solid fa-brain"></i></span>
+            <span class="app-label">Antigravity</span>
           </button>
           <button
             class="btn-app accent"
             onclick="action('/api/system/lock', this)"
           >
-            <span class="app-emoji">🔒</span
-            ><span class="app-label">Bloquear</span>
+            <span class="app-emoji"><i class="fa-solid fa-lock"></i></span>
+            <span class="app-label">Bloquear</span>
           </button>
         </div>
       </div>
@@ -631,6 +632,10 @@
     <div class="toast" id="toast"></div>
 
     <script>
+      function setBrightness(val) {
+        fetch("/api/system/brightness/" + val).catch(() => {});
+      }
+
       function applyPortraitLayout() {
         const card = document.querySelector(".music-card");
         const isPortrait = window.matchMedia("(orientation: portrait)").matches;

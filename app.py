@@ -1,6 +1,8 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import subprocess
 import os
+import json
+import threading
 
 app = Flask(__name__)
 
@@ -18,6 +20,12 @@ def ejecutar_comando(comando):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/api/system/brightness/<int:level>')
+def set_brightness(level):
+    level = max(5, min(100, level))
+    ejecutar_comando(f"brightnessctl set {level}%")
+    return jsonify({"status": "ok"})
 
 @app.route('/api/spotify/current')
 def current_track():
@@ -61,8 +69,8 @@ def launch_app(app_name):
         "calculadora": "gnome-calculator",
         "onlyoffice": "onlyoffice-desktopeditors",
         "configuracion": "gnome-control-center",
-        "antigravity": "python3 -c 'import antigravity'",
-        "navegador": "x-www-browser",
+        "antigravity": "/usr/share/antigravity/antigravity",
+        "navegador": "/opt/zen/zen",
         "archivos": "nautilus",
         "vscode": "code",
         "monitor": "gnome-system-monitor",
@@ -105,4 +113,4 @@ def service_worker():
     return app.response_class(sw_code, mimetype='application/javascript')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9999)
+    app.run(host='0.0.0.0', port=9999, debug=True, use_reloader=True)
