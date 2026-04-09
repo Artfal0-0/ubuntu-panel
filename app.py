@@ -3,9 +3,14 @@ import subprocess
 import os
 import json
 import threading
+import pyautogui 
+import logging
+
+pyautogui.FAILSAFE = False
 
 app = Flask(__name__)
-
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 def ejecutar_comando(comando):
     try:
         mi_env = os.environ.copy()
@@ -17,6 +22,20 @@ def ejecutar_comando(comando):
         print(f"Error: {e}")
         return False
 
+@app.route('/api/mouse/move', methods=['POST'])
+def mouse_move():
+    data = request.json
+    dx = data.get('dx', 0)
+    dy = data.get('dy', 0)
+    pyautogui.move(dx * 2.5, dy * 2.5)
+    return jsonify({"status": "ok"})
+
+@app.route('/api/mouse/click/<button>')
+def mouse_click(button):
+    if button in ['left', 'right']:
+        pyautogui.click(button=button)
+    return jsonify({"status": "ok"})
+    
 @app.route('/')
 def index():
     return render_template('index.html')
